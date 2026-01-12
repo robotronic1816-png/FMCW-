@@ -97,4 +97,18 @@ Key Features
 
 # Project Structure
 
-
+FMCW/
+│
+├── src/
+│ ├── fmcw.py
+│ └── fmcwIQ.py
+│
+├── results/
+│ ├── 01_beat_signal.png
+│ ├── 02_range_fft.png
+│ ├── 03_range_doppler.png
+│ └── 04_cfar_detections.png
+│
+├── README.md
+├── requirements.txt
+└── .gitignore
