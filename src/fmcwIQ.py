@@ -2,9 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import windows, butter, filtfilt
 
-# =========================
 # CFAR FUNCTION
-# =========================
 def cfar_2d(rd_map,
             num_train_r=10, num_guard_r=4,
             num_train_d=6,  num_guard_d=2,
@@ -31,9 +29,7 @@ def cfar_2d(rd_map,
     return detections
 
 
-# =========================
-# RADAR PARAMETERS
-# =========================
+# RADAR PARAMETERS 
 c = 3e8
 fc = 77e9
 B = 200e6
@@ -45,15 +41,9 @@ R = 50.0
 v = -10.0
 num_chirps = 64
 SNR_dB = 15
-
-# =========================
 # TIME AXIS
-# =========================
 t = np.arange(0, T, 1/fs)
-
-# =========================
 # TRANSMIT IQ CHIRP
-# =========================
 tx = np.exp(1j * 2 * np.pi * (S / 2) * t**2)
 
 # Doppler frequency
@@ -61,10 +51,7 @@ f_D = 2 * v * fc / c
 
 # IF FILTER
 b, a = butter(4, 0.25)
-
-# =========================
 # BEAT MATRIX (IQ)
-# =========================
 beat_matrix = np.zeros((num_chirps, len(t)), dtype=complex)
 
 for k in range(num_chirps):
@@ -98,9 +85,7 @@ for k in range(num_chirps):
     beat_matrix[k, :] = beat
 
 
-# =========================
 # RANGE FFT
-# =========================
 beat_matrix *= windows.hann(len(t))[None, :]
 
 range_fft = np.fft.fft(beat_matrix, axis=1)
@@ -108,10 +93,7 @@ range_fft = range_fft[:, :len(t)//2]
 
 freq_r = np.fft.fftfreq(len(t), d=1/fs)[:len(t)//2]
 ranges = (c * freq_r) / (2 * S)
-
-# =========================
 # DOPPLER FFT
-# =========================
 range_fft *= windows.hann(num_chirps)[:, None]
 
 doppler_fft = np.fft.fftshift(
@@ -120,23 +102,14 @@ doppler_fft = np.fft.fftshift(
 )
 
 rd_map = np.abs(doppler_fft)
-
-# =========================
 # AXES
-# =========================
 doppler_freq = np.fft.fftshift(np.fft.fftfreq(num_chirps, d=T))
 velocity_axis = doppler_freq * (c / (2 * fc))
-
-# =========================
 # CFAR
-# =========================
 rd_map_db = 20 * np.log10(rd_map + 1e-6)
 
 detections = cfar_2d(rd_map_db)
-
-# =========================
 # PEAK PICKING
-# =========================
 det_d, det_r = np.where(detections == 1)
 
 if len(det_r) > 0:
@@ -146,15 +119,12 @@ if len(det_r) > 0:
     est_range = ranges[det_r[idx]]
     est_velocity = velocity_axis[det_d[idx]]
 
-    print("===== FINAL TARGET ESTIMATE =====")
+    print(" FINAL TARGET ESTIMATE ")
     print(f"Range    : {est_range:.2f} m")
     print(f"Velocity : {est_velocity:.2f} m/s")
 else:
     print("No target detected.")
-
-# =========================
 # PLOT
-# =========================
 plt.figure(figsize=(9,6))
 plt.imshow(
     rd_map_db,
