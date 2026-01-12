@@ -2,7 +2,7 @@
 
 This project implements a **baseband FMCW (Frequency-Modulated Continuous-Wave) radar signal processing pipeline**, inspired by **automotive radar systems (77 GHz)** used in ADAS applications.
 
-The goal of the project is to simulate the complete radar processing chain — from chirp generation to **Range–Doppler mapping and CFAR-based target detection** — using Python.
+The goal of the project is to simulate the complete radar processing chain from chirp generation to **Range–Doppler mapping and CFAR-based target detection** using Python.
 
 Key Features
 
